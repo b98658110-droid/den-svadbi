@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>С годовщиной свадьбы!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Playfair+Display:wght@600;700;900&family=Cormorant+SC:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --wine:#5c1a34;
+    --wine-deep:#3b0f21;
+    --gold:#c9a227;
+    --gold-soft:#e3c777;
+    --cream:#faf3e8;
+    --charcoal:#2a1620;
+    --blush:#e8b4b8;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--cream);
+    color:var(--charcoal);
+    font-family:'Cormorant Garamond', serif;
+    overflow-x:hidden;
+  }
+
+  /* ===== Ghost numeral watermark ===== */
+  .ghost-18{
+    position:absolute;
+    font-family:'Playfair Display', serif;
+    font-weight:900;
+    font-size:min(60vw, 620px);
+    color:var(--wine);
+    opacity:0.05;
+    line-height:1;
+    user-select:none;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* ===== Hero ===== */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:2rem 1.5rem;
+    background:
+      radial-gradient(ellipse at top, rgba(201,162,39,0.10), transparent 60%),
+      var(--cream);
+    overflow:hidden;
+  }
+
+  .hero .ghost-18{ top:50%; left:50%; transform:translate(-50%,-55%); }
+
+  .eyebrow{
+    font-family:'Cormorant SC', serif;
+    letter-spacing:0.45em;
+    text-transform:uppercase;
+    font-size:0.9rem;
+    color:var(--wine);
+    z-index:1;
+    opacity:0;
+    animation:riseIn 1s ease forwards 0.2s;
+  }
+
+  .hero h1{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:clamp(2.4rem, 7vw, 5rem);
+    color:var(--wine-deep);
+    margin:0.6rem 0 1rem;
+    z-index:1;
+    opacity:0;
+    animation:riseIn 1s ease forwards 0.45s;
+  }
+
+  .hero h1 em{
+    font-style:italic;
+    color:var(--gold);
+  }
+
+  .date-line{
+    z-index:1;
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    font-size:clamp(1.1rem, 2.6vw, 1.5rem);
+    color:var(--charcoal);
+    opacity:0;
+    animation:riseIn 1s ease forwards 0.7s;
+  }
+
+  .date-line .rule{
+    width:44px;
+    height:1px;
+    background:var(--gold);
+  }
+
+  .years-badge{
+    z-index:1;
+    margin-top:2.4rem;
+    width:132px;
+    height:132px;
+    border-radius:50%;
+    border:1.5px solid var(--gold);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    opacity:0;
+    animation:riseIn 1s ease forwards 0.95s, spinSlow 40s linear infinite 2s;
+  }
+  .years-badge::before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border-radius:50%;
+    border:1px solid var(--gold-soft);
+  }
+  .years-badge .num{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:2.6rem;
+    color:var(--wine);
+  }
+  .years-badge .label{
+    font-family:'Cormorant SC', serif;
+    letter-spacing:0.15em;
+    font-size:0.75rem;
+    text-transform:uppercase;
+    color:var(--wine);
+  }
+
+  .scroll-hint{
+    position:absolute;
+    bottom:2rem;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:0.85rem;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:var(--wine);
+    opacity:0.6;
+    z-index:1;
+    animation:bob 2.4s ease-in-out infinite;
+  }
+
+  @keyframes riseIn{
+    from{ opacity:0; transform:translateY(18px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  @keyframes bob{
+    0%,100%{ transform:translate(-50%,0); }
+    50%{ transform:translate(-50%,8px); }
+  }
+  @keyframes spinSlow{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+  }
+
+  /* ===== Section shell ===== */
+  section{
+    position:relative;
+    padding:6rem 1.5rem;
+    max-width:880px;
+    margin:0 auto;
+  }
+
+  .section-heading{
+    text-align:center;
+    margin-bottom:3rem;
+  }
+  .section-heading .eyebrow{ animation:none; opacity:1; }
+  .section-heading h2{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:clamp(1.8rem, 4vw, 2.6rem);
+    color:var(--wine-deep);
+    margin-top:0.4rem;
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.is-visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ===== Photo frame ===== */
+  .photo-wrap{
+    display:flex;
+    justify-content:center;
+  }
+  .photo-frame{
+    width:min(90vw, 480px);
+    aspect-ratio:4/5;
+    border:1.5px solid var(--gold);
+    padding:14px;
+    position:relative;
+  }
+  .photo-frame::before{
+    content:"";
+    position:absolute;
+    inset:6px;
+    border:1px solid var(--gold-soft);
+    pointer-events:none;
+  }
+  .photo-inner{
+    width:100%;
+    height:100%;
+    background:
+      repeating-linear-gradient(135deg, rgba(92,26,52,0.06) 0 12px, transparent 12px 24px),
+      #fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:0.6rem;
+    color:var(--wine);
+    overflow:hidden;
+  }
+  /* Вставьте свою фотографию так:
+     <img src="ваше-фото.jpg" alt="..." class="couple-photo"> внутрь .photo-inner
+     — класс .couple-photo уже настроен под рамку ниже. */
+  .couple-photo{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  .photo-inner svg{ width:46px; height:46px; opacity:0.55; }
+  .photo-inner .hint{
+    font-size:0.95rem;
+    letter-spacing:0.05em;
+    max-width:70%;
+    line-height:1.4;
+  }
+  .photo-caption{
+    text-align:center;
+    margin-top:1.2rem;
+    font-style:italic;
+    color:var(--wine);
+    font-size:1.05rem;
+  }
+
+  /* ===== Message cards ===== */
+  .messages{
+    display:flex;
+    flex-direction:column;
+    gap:2.4rem;
+  }
+  .msg-card{
+    background:#fff;
+    border-left:3px solid var(--gold);
+    padding:2rem 2.2rem;
+    box-shadow:0 12px 30px -18px rgba(59,15,33,0.35);
+  }
+  .msg-card .from{
+    font-family:'Cormorant SC', serif;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    font-size:0.85rem;
+    color:var(--gold);
+    margin-bottom:0.8rem;
+  }
+  .msg-card p{
+    font-size:1.15rem;
+    line-height:1.75;
+    color:var(--charcoal);
+  }
+  .msg-card p + p{ margin-top:1rem; }
+  .msg-card .sign{
+    margin-top:1.2rem;
+    font-style:italic;
+    color:var(--wine);
+    text-align:right;
+  }
+
+  /* ===== Timeline ribbon ===== */
+  .ribbon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:1.4rem;
+    margin:5rem auto 0;
+    max-width:520px;
+  }
+  .ribbon .year{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-size:1.6rem;
+    color:var(--wine-deep);
+  }
+  .ribbon .line{
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    position:relative;
+  }
+  .ribbon .line::after{
+    content:"♥";
+    position:absolute;
+    left:50%; top:50%;
+    transform:translate(-50%,-55%);
+    color:var(--gold);
+    font-size:0.9rem;
+    background:var(--cream);
+    padding:0 6px;
+  }
+
+  /* ===== Footer ===== */
+  footer{
+    text-align:center;
+    padding:4rem 1.5rem 5rem;
+    color:var(--wine);
+  }
+  footer .big{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:clamp(1.6rem, 4vw, 2.3rem);
+    color:var(--wine-deep);
+    margin-bottom:0.6rem;
+  }
+  footer .small{
+    font-size:1rem;
+    letter-spacing:0.08em;
+    opacity:0.8;
+  }
+
+  /* ===== Falling petals (respects reduced motion) ===== */
+  .petal{
+    position:fixed;
+    top:-5vh;
+    width:10px;
+    height:10px;
+    border-radius:50% 0 50% 50%;
+    background:var(--gold-soft);
+    opacity:0.7;
+    pointer-events:none;
+    z-index:5;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(360deg); opacity:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    .reveal{ opacity:1; transform:none; }
+  }
+
+  :focus-visible{
+    outline:2px solid var(--wine);
+    outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="petals" style="display:none;"></canvas>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="ghost-18">18</div>
+  <p class="eyebrow">С годовщиной свадьбы</p>
+  <h1>Восемнадцать лет <em>вместе</em></h1>
+  <div class="date-line">
+    <span class="rule"></span>
+    <span>18 августа 2008 — 18 августа 2026</span>
+    <span class="rule"></span>
+  </div>
+  <div class="years-badge">
+    <span class="num">18</span>
+    <span class="label">лет любви</span>
+  </div>
+  <div class="scroll-hint">Листайте вниз ↓</div>
+</div>
+
+<!-- ===== PHOTO ===== -->
+<section>
+  <div class="section-heading reveal">
+    <p class="eyebrow">Один момент из тысяч</p>
+    <h2>Ваша история — в одном кадре</h2>
+  </div>
+  <div class="photo-wrap reveal">
+    <div class="photo-frame">
+      <div class="photo-inner" id="photoInner">
+        <img src="photo_2026-08-08_20-47-54.jpg" alt="Мама и папа" class="couple-photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+          <rect x="3" y="5" width="18" height="14" rx="1.5"/>
+          <circle cx="9" cy="10" r="2"/>
+          <path d="M21 16l-5.5-5.5a2 2 0 0 0-2.8 0L3 19"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <p class="photo-caption reveal">«Из всех дорог, что мы могли выбрать — мы выбрали одну на двоих»</p>
+</section>
+
+<!-- ===== TIMELINE ===== -->
+<div class="ribbon reveal">
+  <span class="year">2008</span>
+  <span class="line"></span>
+  <span class="year">2026</span>
+</div>
+
+<!-- ===== MESSAGES ===== -->
+<section>
+  <div class="section-heading reveal">
+    <p class="eyebrow">Поздравления от всей семьи</p>
+    <h2>То, что мы всегда хотели вам сказать</h2>
+  </div>
+
+  <div class="messages">
+    <div class="msg-card reveal">
+      <p class="from">От сыновей</p>
+      <p>Дорогие мама и папа! Восемнадцать лет назад вы дали друг другу слово — и все эти годы держали его, не заметно, без пафоса, каждый день заново. Мы выросли, наблюдая, как выглядит настоящая любовь: не в громких словах, а в том, как вы поддерживаете друг друга в трудную минуту и радуетесь любой мелочи вместе.</p>
+      <p>Спасибо, что показали нам, каким должен быть дом — тёплым, честным и всегда открытым. Мы гордимся вами и желаем вам ещё столько же лет счастья, сколько уже прожито вместе, а лучше — вдвое больше.</p>
+      <p class="sign">С любовью, ваши сыновья</p>
+    </div>
+
+    <div class="msg-card reveal">
+      <p class="from">От дочери</p>
+      <p>Мама, папа, с годовщиной свадьбы! Восемнадцать лет — это не просто дата в календаре, это восемнадцать лет смеха за общим столом, поддержки в трудные дни и той самой тихой нежности, которую вы храните друг для друга даже спустя столько времени.</p>
+      <p>Вы — пример того, что настоящая любовь не выцветает, а становится глубже. Хочу, чтобы вы знали: то, что вы построили, стало опорой для всей нашей семьи. Обнимаю вас крепко и желаю новых счастливых лет вместе.</p>
+      <p class="sign">Ваша дочь</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="big">С днём свадьбы, мама и папа!</p>
+  <p class="small">18 августа · с любовью — ваши дети</p>
+</footer>
+
+<script>
+  // Плавное появление блоков при прокрутке
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Лёгкий эффект падающих лепестков — только если у пользователя нет
+  // настройки "уменьшить анимацию"
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReducedMotion) {
+    const spawnPetal = () => {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      petal.style.left = Math.random() * 100 + 'vw';
+      const duration = 9 + Math.random() * 8;
+      const delay = Math.random() * 2;
+      petal.style.animationDuration = duration + 's';
+      petal.style.animationDelay = delay + 's';
+      petal.style.opacity = (0.4 + Math.random() * 0.4).toFixed(2);
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), (duration + delay) * 1000 + 500);
+    };
+    for (let i = 0; i < 6; i++) setTimeout(spawnPetal, i * 900);
+    setInterval(spawnPetal, 2600);
+  }
+</script>
+
+</body>
+</html>
